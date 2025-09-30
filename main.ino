@@ -6,7 +6,7 @@
 
 const char* ssid = "YOUR_WIFI";
 const char* password = "YOUR_PASS";
-const char* serverUrl = "https://your-api.com/endpoint";  // HTTPS URL
+const char* serverUrl = "https://eq-location-web.vercel.app/raw_loc";  // HTTPS URL
 
 SoftwareSerial gpsSerial(4, 3);   // RX=4 (GPS TX), TX=3 (GPS RX)
 TinyGPSPlus gps;

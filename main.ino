@@ -4,11 +4,11 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecureBearSSL.h>  // Required for HTTPS
 
-const char* ssid = "YOUR_WIFI";
-const char* password = "YOUR_PASS";
+const char* ssid = "VIENICE";
+const char* password = "asamganobs";
 const char* serverUrl = "https://eq-location-web.vercel.app/raw_loc";  // HTTPS URL
 
-SoftwareSerial gpsSerial(4, 3);   // RX=4 (GPS TX), TX=3 (GPS RX)
+SoftwareSerial gpsSerial(12, 14);   // RX=4 (GPS TX), TX=3 (GPS RX)
 TinyGPSPlus gps;
 
 double lastLat = 0.0;
@@ -44,7 +44,7 @@ void loop() {
 
   if (WiFi.status() == WL_CONNECTED) {
     BearSSL::WiFiClientSecure client;
-    client.setInsecure();  // ✅ ALLOW SELF-SIGNED / NO CERT CHECK
+    client.setInsecure();
 
     HTTPClient http;
     http.begin(client, serverUrl);
@@ -64,7 +64,12 @@ void loop() {
     http.end();
   }
 
-  delay(5000);
+  while (gpsSerial.available()) {
+    char data = gpsSerial.read();
+    Serial.print(data);
+  }
+
+  delay(1000);
 }
 
 void updateCoordinates() {
@@ -74,10 +79,6 @@ void updateCoordinates() {
   } else if (hasFixEver) {
     finalLat = String(lastLat, 6);
     finalLon = String(lastLon, 6);
-  } else {
-    finalLat = "0.000000";
-    finalLon = "0.000000";
   }
-
   Serial.println("GPS -> " + finalLat + ", " + finalLon);
 }
